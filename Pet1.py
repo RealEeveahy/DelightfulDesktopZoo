@@ -32,7 +32,7 @@ class pet():
         self.directionCoefficient = 1
 
         #define default image, then list of images
-        self.img = tk.PhotoImage(file='pets/ladybug/ladybug_default.png')
+        self.img = tk.PhotoImage(file='DelightfulDesktopZoo/pets/ladybug/ladybug_default.png')
 
         self.actionList = ['idle', 'walk', 'knockdown']
         for s in self.actionList:
@@ -84,7 +84,7 @@ class pet():
         self.speed = 2
     
     def cutSheet(self, param):
-        sheet_filename = f'pets/ladybug/ladybug_{param}sheet.png'
+        sheet_filename = f'DelightfulDesktopZoo/pets/ladybug/ladybug_{param}sheet.png'
         sheet_image = Image.open(sheet_filename)
 
         sheet_width, sheet_height = sheet_image.size
@@ -100,7 +100,7 @@ class pet():
             sprite = sheet_image.crop((left, upper, right, lower))
             sprite_list.append(sprite)
 
-        sprite_folder = f'pets/ladybug/ladybug_{param}'
+        sprite_folder = f'DelightfulDesktopZoo/pets/ladybug/ladybug_{param}'
         if not os.path.exists(sprite_folder):
             os.mkdir(sprite_folder)
 
@@ -138,7 +138,7 @@ class pet():
         self.y += movementY
 
         #Get the current image path
-        image_path = 'pets/ladybug/ladybug_walk/walk_{}.png'.format(self.indexInAnimation)
+        image_path = 'DelightfulDesktopZoo/pets/ladybug/ladybug_walk/walk_{}.png'.format(self.indexInAnimation)
 
         #add the image to our label
         img = tk.PhotoImage(file= image_path)
@@ -158,7 +158,7 @@ class pet():
 
     def Idle(self):
         #Get the current image path
-        image_path = 'pets/ladybug/ladybug_idle/idle_{}.png'.format(self.indexInAnimation)
+        image_path = 'DelightfulDesktopZoo/pets/ladybug/ladybug_idle/idle_{}.png'.format(self.indexInAnimation)
         img = tk.PhotoImage(file= image_path)
 
         if self.directionCoefficient == 1: flipImg = img.subsample(x=1, y=1)
@@ -188,7 +188,7 @@ class pet():
         #give window to geometry manager
         self.label.pack()
 
-        file_list = os.listdir(f'pets/ladybug/ladybug_{self.currentAction}')
+        file_list = os.listdir(f'DelightfulDesktopZoo/pets/ladybug/ladybug_{self.currentAction}')
 
         self.indexInAnimation += 1
         if self.indexInAnimation >= len(file_list):

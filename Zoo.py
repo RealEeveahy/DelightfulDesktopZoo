@@ -14,7 +14,7 @@ class mainWindow():
         #retain the size
         self.window.resizable(False, False)
 
-        pets_list = os.listdir('pets')
+        pets_list = os.listdir('DelightfulDesktopZoo/pets')
 
         self.titleLabel = tk.Label(text="Welcome to Mae's Delightful Desktop Zoo! Please choose a pet to begin playing!", font=("Helvetica", 16))
         self.titleLabel.grid(row=0, column=0, pady= 1, columnspan= 3)
@@ -24,7 +24,7 @@ class mainWindow():
         row_count = 1
         col_count = 0
         for pet in pets_list:
-            pet_image = Image.open(f'pets/{pet}/{pet}_default.png')
+            pet_image = Image.open(f'DelightfulDesktopZoo/pets/{pet}/{pet}_default.png')
             pet_image = pet_image.resize(button_image_size)
             
             pet_image_tk = ImageTk.PhotoImage(pet_image)
