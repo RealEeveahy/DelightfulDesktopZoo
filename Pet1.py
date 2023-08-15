@@ -73,6 +73,8 @@ class pet():
     
     def on_click(self, event):
         print("Clicked!")
+        self.currentAction = self.actionList[2]
+        self.indexInAnimation = 0
 
     def actionVar(self):
         self.targetPosition = (self.targetX, self.targetY)
@@ -167,6 +169,13 @@ class pet():
 
         self.label.configure(image=flipImg)
         self.label.image = flipImg
+    
+    def Knockdown(self):
+        image_path = 'DelightfulDesktopZoo/pets/ladybug/ladybug_knockdown/knockdown_{}.png'.format(self.indexInAnimation)
+        img = tk.PhotoImage(file= image_path)
+
+        self.label.configure(image = img)
+        self.label.image = img
 
     def DecideAction(self):
         self.currentAction = self.actionList[random.randint(0,1)]
@@ -181,6 +190,8 @@ class pet():
             self.Walk()
         elif self.currentAction == 'idle':
             self.Idle()
+        elif self.currentAction == 'knockdown':
+            self.Knockdown()
 
         #create the window
         self.window.geometry('124x116+{x}+{y}' .format(x=str(self.x), y=str(self.y)))

@@ -44,7 +44,7 @@ class mainWindow():
 
     def run_script(self, pet):
         try:
-            subprocess.run(["python", "Pet1.py"])
+            subprocess.run(["python", "DelightfulDesktopZoo/Pet1.py"])
         except Exception as e:
             print(f"Error running {pet}.py: {e}")
 
