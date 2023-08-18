@@ -1,0 +1,6 @@
+{
+    "name": "Sun Mage",
+    "default_icon": "ladybug_images/ladybug_default.png",
+    "actions": ["idle,walk,knockdown"],
+    "sprite_size": "(124,116)"
+}
