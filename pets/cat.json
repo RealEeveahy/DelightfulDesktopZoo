@@ -1,6 +1,6 @@
 {
     "name": "ScribbleCat",
     "default_icon": "cat_images/cat_default.png",
-    "actions": ["idle"],
-    "sprite_size": "(300,300)"
+    "actions": "idle",
+    "sprite_size": "(300,250)"
 }

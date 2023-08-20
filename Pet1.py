@@ -5,6 +5,7 @@ from PIL import Image
 import os
 import random
 import sys
+import ast
 
 class pet():
     def __init__(self): #Start()
@@ -12,11 +13,15 @@ class pet():
         self.window = tk.Tk()
 
         if len(sys.argv) < 2:
-            print("Usage: python pet_scrupt.py <pet_name>")
+            print("Usage: python pet_script.py <pet_name>")
             sys.exit(1)
 
-        pet_name = sys.argv[1]
-        print(f"Running script for {pet_name}")
+        self.thisPet = sys.argv[1]
+        self.pet_name = os.path.splitext(self.thisPet)[0]
+        pet_filename = os.path.join("DelightfulDesktopZoo/pets/",self.thisPet)
+        with open(pet_filename, "r") as json_file:
+                self.pet_data = json.load(json_file)
+        print(f"Running script for {self.thisPet}")
 
         #get the screen size
         self.screen_width = self.window.winfo_screenwidth()
@@ -34,20 +39,21 @@ class pet():
         self.indexInAnimation = 0
 
         #define dimensions
-        self.sprite_width = 124
-        self.sprite_height = 116
+        sprite_size_str = self.pet_data["sprite_size"]
+        sprite_size_tuple = ast.literal_eval(sprite_size_str)
+        self.sprite_width, self.sprite_height = sprite_size_tuple
 
         self.actionVar()
         self.directionCoefficient = 1
 
         #define default image, then list of images
-        self.img = tk.PhotoImage(file='DelightfulDesktopZoo/pets/ladybug_images/ladybug_default.png')
+        self.img = tk.PhotoImage(file=f'DelightfulDesktopZoo/pets/{self.pet_name}_images/{self.pet_name}_default.png')
 
-        self.actionList = ['idle', 'walk', 'knockdown']
+        self.actionList = self.pet_data["actions"].split(", ")
         for s in self.actionList:
             self.cutSheet(s)
 
-        self.currentAction = self.actionList[1]
+        self.currentAction = self.actionList[0]
 
         #set focuslight to black when window unfocused
         self.window.config(highlightbackground='black')
@@ -95,7 +101,7 @@ class pet():
         self.speed = 2
     
     def cutSheet(self, param):
-        sheet_filename = f'DelightfulDesktopZoo/pets/ladybug_images/ladybug_{param}sheet.png'
+        sheet_filename = f'DelightfulDesktopZoo/pets/{self.pet_name}_images/{self.pet_name}_{param}sheet.png'
         sheet_image = Image.open(sheet_filename)
 
         sheet_width, sheet_height = sheet_image.size
@@ -111,7 +117,7 @@ class pet():
             sprite = sheet_image.crop((left, upper, right, lower))
             sprite_list.append(sprite)
 
-        sprite_folder = f'DelightfulDesktopZoo/pets/ladybug_images/ladybug_{param}'
+        sprite_folder = f'DelightfulDesktopZoo/pets/{self.pet_name}_images/{self.pet_name}_{param}'
         if not os.path.exists(sprite_folder):
             os.mkdir(sprite_folder)
 
@@ -149,7 +155,7 @@ class pet():
         self.y += movementY
 
         #Get the current image path
-        image_path = 'DelightfulDesktopZoo/pets/ladybug_images/ladybug_walk/walk_{}.png'.format(self.indexInAnimation)
+        image_path = f'DelightfulDesktopZoo/pets/{self.pet_name}_images/{self.pet_name}_walk/walk_{self.indexInAnimation}.png'
 
         #add the image to our label
         img = tk.PhotoImage(file= image_path)
@@ -169,7 +175,7 @@ class pet():
 
     def Idle(self):
         #Get the current image path
-        image_path = 'DelightfulDesktopZoo/pets/ladybug_images/ladybug_idle/idle_{}.png'.format(self.indexInAnimation)
+        image_path = f'DelightfulDesktopZoo/pets/{self.pet_name}_images/{self.pet_name}_idle/idle_{self.indexInAnimation}.png'
         img = tk.PhotoImage(file= image_path)
 
         if self.directionCoefficient == 1: flipImg = img.subsample(x=1, y=1)
@@ -180,14 +186,14 @@ class pet():
         self.label.image = flipImg
     
     def Knockdown(self):
-        image_path = 'DelightfulDesktopZoo/pets/ladybug_images/ladybug_knockdown/knockdown_{}.png'.format(self.indexInAnimation)
+        image_path = f'DelightfulDesktopZoo/pets/{self.pet_name}_images/{self.pet_name}_knockdown/knockdown_{self.indexInAnimation}.png'
         img = tk.PhotoImage(file= image_path)
 
         self.label.configure(image = img)
         self.label.image = img
 
     def DecideAction(self):
-        self.currentAction = self.actionList[random.randint(0,1)]
+        self.currentAction = self.actionList[random.randint(0,len(self.actionList)-1)]
 
     def update(self): #Update()
         #update variables
@@ -203,12 +209,12 @@ class pet():
             self.Knockdown()
 
         #create the window
-        self.window.geometry('124x116+{x}+{y}' .format(x=str(self.x), y=str(self.y)))
+        self.window.geometry('{sx}x{sy}+{x}+{y}' .format(x=str(self.x), y=str(self.y),sx=str(self.sprite_width),sy=str(self.sprite_height)))
 
         #give window to geometry manager
         self.label.pack()
 
-        file_list = os.listdir(f'DelightfulDesktopZoo/pets/ladybug_images/ladybug_{self.currentAction}')
+        file_list = os.listdir(f'DelightfulDesktopZoo/pets/{self.pet_name}_images/{self.pet_name}_{self.currentAction}')
 
         self.indexInAnimation += 1
         if self.indexInAnimation >= len(file_list):
