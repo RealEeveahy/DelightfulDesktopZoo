@@ -49,11 +49,18 @@ class pet():
         #define default image, then list of images
         self.img = tk.PhotoImage(file=f'DelightfulDesktopZoo/pets/{self.pet_name}_images/{self.pet_name}_default.png')
 
-        self.actionList = self.pet_data["actions"].split(", ")
-        for s in self.actionList:
+        #get a list of possible actions and reactions (click events)
+        self.idlesList = self.pet_data["idle_actions"].split(", ")
+        self.reactionsList = self.pet_data["reactions"].split(", ")
+        #cut the spritesheets for each action
+        for s in self.idlesList:
             self.cutSheet(s)
+        if self.reactionsList != ['']:
+            for s in self.reactionsList:
+                self.cutSheet(s)
 
-        self.currentAction = self.actionList[0]
+        #instantiate current action
+        self.currentAction = self.idlesList[0]
 
         #set focuslight to black when window unfocused
         self.window.config(highlightbackground='black')
@@ -86,11 +93,13 @@ class pet():
         self.window.after(0, self.update)
         self.window.mainloop()
     
+    #action to do when pet is clicked
     def on_click(self, event):
         print("Clicked!")
-        self.currentAction = self.actionList[2]
+        self.currentAction = self.reactionsList[random.randint(0,len(self.reactionsList)-1)]
         self.indexInAnimation = 0
 
+    #container for variables
     def actionVar(self):
         self.targetPosition = (self.targetX, self.targetY)
 
@@ -193,7 +202,7 @@ class pet():
         self.label.image = img
 
     def DecideAction(self):
-        self.currentAction = self.actionList[random.randint(0,len(self.actionList)-1)]
+        self.currentAction = self.idlesList[random.randint(0,len(self.idlesList)-1)]
 
     def update(self): #Update()
         #update variables

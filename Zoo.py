@@ -66,10 +66,10 @@ class mainWindow():
             self.petButton.photo = pet_image_tk
             self.petButton.grid(row=row_count, column=col_count, padx=5, pady= 5)
 
-            self.destroy_pet = tk.Button(self.window, text='x', width=5, height=5,
+            self.destroy_pet = tk.Button(self.window, text='x', width=5, height=2,
                                           bg='red', command=lambda pet=pet: self.end_pet(pet))
             self.destroy_pet.grid(row=row_count, column=col_count, sticky="ne")
-            self.destroy_pet.grid_forget()
+            self.destroy_pet.grid_remove()
 
             self.end_buttons[pet] = self.destroy_pet
             
@@ -78,7 +78,7 @@ class mainWindow():
                 col_count = 0
                 row_count +=1
         
-        self.hide_buttons()
+        #self.hide_buttons()
         self.window.mainloop()
 
     def hide_buttons(self):
@@ -88,10 +88,11 @@ class mainWindow():
     def run_script(self, pet):
         #spawn in a pet when clicked
         try:
-            process = subprocess.Popen(["python", "DelightfulDesktopZoo/Pet1.py", pet])
-            self.running_subprocess[pet] = process
-            endbutton = self.end_buttons[pet]
-            endbutton.grid()
+            if pet not in self.running_subprocess:
+                process = subprocess.Popen(["python", "DelightfulDesktopZoo/Pet1.py", pet])
+                self.running_subprocess[pet] = process
+                endbutton = self.end_buttons[pet]
+                endbutton.grid()
         except Exception as e:
             print(f"Error running {pet}.py: {e}")
 
@@ -99,6 +100,8 @@ class mainWindow():
         if pet in self.running_subprocess:
             process = self.running_subprocess[pet]
             process.terminate()
+            endbutton = self.end_buttons[pet]
+            endbutton.grid_remove()
             del self.running_subprocess[pet]
 
 mainWindow()

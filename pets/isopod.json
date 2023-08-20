@@ -1,6 +1,7 @@
 {
     "name": "Isopod",
     "default_icon": "isopod_images/isopod_default.png",
-    "actions": "idle",
+    "idle_actions": "idle",
+    "reactions":"knockdown",
     "sprite_size": "(500,500)"
 }
